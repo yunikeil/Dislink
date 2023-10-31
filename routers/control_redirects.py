@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 
-from db_services import redirect_info as RedirectDB
+from services import redirect_info as RedirectDB
 from dto import redirect_info as RedirictDTO
 
 
