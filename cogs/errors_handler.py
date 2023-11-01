@@ -3,6 +3,11 @@ from nextcord.ext import commands
 from nextcord.ext.commands import Context
 
 # TODO попробовать переписать на discord.py с нуля все коги
+"""
+Меня не устраивает 
+ * ошибки при вызове незарегестрированной команды
+ * выводящиеся в консоль ошибки при их 'обработке' в листенерах
+"""
 class ErrorHandlingCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
