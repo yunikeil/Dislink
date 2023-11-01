@@ -1,7 +1,12 @@
 import nextcord
+import logging
 from nextcord import Interaction, Locale
 from nextcord.ext import tasks, application_checks
 from nextcord.ext.commands import Bot, Cog
+
+
+logging.basicConfig(level=logging.INFO)
+
 
 class RedirManagerCog(Cog):
     def __init__(self, bot: Bot):
@@ -26,9 +31,8 @@ class RedirManagerCog(Cog):
         },
         guild_ids=[1064192306904846377]
     )
-    #@application_checks.has_permissions(administrator=True)
+    @application_checks.has_permissions(administrator=True)
     async def get_invite(self, interaction: Interaction):
-        print(interaction.locale)
         await interaction.response.send_message("123", ephemeral=True)
 
     @nextcord.slash_command(
@@ -42,7 +46,7 @@ class RedirManagerCog(Cog):
         },
         guild_ids=[1064192306904846377]
     )
-    #@application_checks.has_permissions(administrator=True)
+    @application_checks.has_permissions(administrator=True)
     async def create_invite(self, interaction: Interaction):
         await interaction.response.send_message("123", ephemeral=True)
 
@@ -57,7 +61,7 @@ class RedirManagerCog(Cog):
         },
         guild_ids=[1064192306904846377]
     )
-    #@application_checks.has_permissions(administrator=True)
+    @application_checks.has_permissions(administrator=True)
     async def update_invite(self, interaction: Interaction):
         await interaction.response.send_message("123", ephemeral=True)
 
@@ -72,7 +76,7 @@ class RedirManagerCog(Cog):
         },
         guild_ids=[1064192306904846377]
     )
-    #@application_checks.has_permissions(administrator=True)
+    @application_checks.has_permissions(administrator=True)
     async def delete_invite(self, interaction: Interaction):
         await interaction.response.send_message("123", ephemeral=True)
 
