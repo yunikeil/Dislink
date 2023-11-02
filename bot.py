@@ -1,9 +1,7 @@
 import asyncio
-import logging
 
 import aeval
 import discord
-from discord import app_commands
 from discord.ext import commands
 
 import configuration
@@ -42,25 +40,26 @@ class DeleteMessage(discord.ui.View):
 class Bot(commands.Bot):
     def __init__(
         self,
-        cogs_add_on_ready=None,
         command_prefix=None,
         help_command=None,
         intents=None,
+        cogs_on_start=None,
+        **kwargs,
     ):
         super().__init__(
-            command_prefix=command_prefix, help_command=help_command, intents=intents
+            command_prefix=command_prefix,
+            help_command=help_command,
+            intents=intents,
+            **kwargs,
         )
         self.DATA: dict = {"bot-started": False}
         self.OWNERS = configuration.bot_owners
         self.EVAL_OWNER = configuration.eval_owners
-        self.cogs_add_on_ready = cogs_add_on_ready
-    
+        self.cogs_on_start = cogs_on_start
+
     async def setup_hook(self):
-        if self.cogs_add_on_ready:
-            [
-                await self.load_extension(f"cogs.{cog}")
-                for cog in self.cogs_add_on_ready
-            ]
+        if self.cogs_on_start:
+            [await self.load_extension(f"cogs.{cog}") for cog in self.cogs_on_start]
         self.tree.copy_global_to(guild=discord.Object(id=1064192306904846377))
         await self.tree.sync()
 
@@ -72,19 +71,20 @@ class Bot(commands.Bot):
             self.EVAL_OWNER.append(application_info.owner.id)
             self.DATA["bot-started"] = True
 
+
 intents = discord.Intents.default()
-intents.message_content = True  
+intents.message_content = True
 
 bot: commands.Bot = Bot(
-    cogs_add_on_ready=configuration.cogs_add_on_ready,
-    intents=intents,
     command_prefix=">",
-    help_command=None,
+    cogs_on_start=configuration.cogs_on_start,
+    intents=intents,
 )
 
 
 @bot.command()
 async def cog_load(ctx: commands.Context, cog: str):
+    # ! loading all cogs in file
     if ctx.author.id not in bot.OWNERS:
         return
     try:
@@ -99,6 +99,7 @@ async def cog_load(ctx: commands.Context, cog: str):
 
 @bot.command()
 async def cog_unload(ctx: commands.Context, cog: str):
+    # ! unloading all cogs in file
     if ctx.author.id not in bot.OWNERS:
         return
     try:
@@ -113,6 +114,7 @@ async def cog_unload(ctx: commands.Context, cog: str):
 
 @bot.command()
 async def cog_reload(ctx: commands.Context, cog: str):
+    # ! reloading all cogs in file
     if ctx.author.id not in bot.OWNERS:
         return
     try:
@@ -140,7 +142,7 @@ async def remove_cog(ctx: commands.Context, cog: str):
 
 
 @bot.command(name="eval")
-async def eval_string(ctx, *, content):
+async def eval_string(ctx: commands.Context, *, content: str):
     if ctx.author.id not in bot.EVAL_OWNER:
         return
     standart_args = {
