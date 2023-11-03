@@ -17,4 +17,4 @@ discord_token: str = ""
 
 # Server config
 
-allowed_ips: List[str] = [] 
+control_redirects_allowed_ips: List[str] = [] 
