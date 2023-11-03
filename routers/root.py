@@ -1,49 +1,20 @@
+from fastapi import APIRouter, Request, Depends, status
+from fastapi.responses import RedirectResponse
+from sqlalchemy.orm import Session
+
+from database import get_db
+from services import redirect_info as RedirictDB
 
 
+router = APIRouter(tags=["root"])
+DISCORD_INVITE: str = "https://discord.gg/"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@router.get("/{domen_link}")
+async def redirector(request: Request, domen_link: str, db: Session = Depends(get_db)):
+    redirect_link = RedirictDB.get_redirect(db, domen_link=domen_link)
+    if redirect_link:
+        return RedirectResponse(DISCORD_INVITE+redirect_link.server_link, status_code=301)
+    else:
+        return {
+            "comment": f"non-existent link={str(request.base_url)+domen_link}({type(domen_link)})",
+        }
