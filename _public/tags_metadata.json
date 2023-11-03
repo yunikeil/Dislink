@@ -1,0 +1,10 @@
+[
+    {
+        "name": "redirect",
+        "description": "Closed methods for Dislink's bot."
+    },
+    {
+        "name": "root",
+        "description": "Bublick redirect methods."
+    }
+]
