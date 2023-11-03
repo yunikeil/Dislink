@@ -9,3 +9,4 @@ class RedirectInfo(Base):
     server_id = Column(Integer, primary_key=True, index=True)
     server_link = Column(String, unique=True, index=True)
     domen_link = Column(String, unique=True, index=True)
+    last_use = Column(Integer, unique=False, default=None)
