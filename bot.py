@@ -2,9 +2,29 @@ import asyncio
 
 import aeval
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 import configuration
+
+
+class MyCustomTranslator(app_commands.Translator):
+    async def load(self):
+        ...
+    # this gets called when the translator first gets loaded!
+    async def unload(self):
+        ...
+        # in case you need to switch translators, this gets called when being removed
+    async def translate(self, string: app_commands.locale_str, locale: discord.Locale, context: app_commands.TranslationContext):
+        """
+        `locale_str` is the string that is requesting to be translated
+        `locale` is the target language to translate to
+        `context` is the origin of this string, eg TranslationContext.command_name, etc
+        This function must return a string (that's been translated), or `None` to signal no available translation available, and will default to the original.
+        """
+        message_str = string.message
+        return "qwerty123"
+
 
 
 class DeleteMessage(discord.ui.View):
@@ -58,10 +78,11 @@ class Bot(commands.Bot):
         self.cogs_on_start = cogs_on_start
 
     async def setup_hook(self):
+        await   self.tree.set_translator(MyCustomTranslator())
         if self.cogs_on_start:
             [await self.load_extension(f"cogs.{cog}") for cog in self.cogs_on_start]
         self.tree.copy_global_to(guild=discord.Object(id=1064192306904846377))
-        await self.tree.sync()
+        await self.tree.sync(guild=discord.Object(id=1064192306904846377))
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})\n------")
