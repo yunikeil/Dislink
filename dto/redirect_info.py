@@ -8,4 +8,4 @@ class RedirectInfo(BaseModel):
 
 
 class RedirectError(BaseModel):
-    comment: str
+    detail: str
