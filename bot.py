@@ -22,9 +22,7 @@ class MyCustomTranslator(app_commands.Translator):
         `context` is the origin of this string, eg TranslationContext.command_name, etc
         This function must return a string (that's been translated), or `None` to signal no available translation available, and will default to the original.
         """
-        message_str = string.message
-        return "qwerty123"
-
+        return string.message
 
 
 class DeleteMessage(discord.ui.View):
@@ -78,11 +76,11 @@ class Bot(commands.Bot):
         self.cogs_on_start = cogs_on_start
 
     async def setup_hook(self):
-        await   self.tree.set_translator(MyCustomTranslator())
+        await self.tree.set_translator(MyCustomTranslator())
         if self.cogs_on_start:
             [await self.load_extension(f"cogs.{cog}") for cog in self.cogs_on_start]
         self.tree.copy_global_to(guild=discord.Object(id=1064192306904846377))
-        await self.tree.sync(guild=discord.Object(id=1064192306904846377))
+        #await self.tree.sync(guild=discord.Object(id=1064192306904846377))
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})\n------")
