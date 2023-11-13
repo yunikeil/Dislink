@@ -13,7 +13,6 @@ from services.static import get_static_files
 
 DISCORD_INVITE: str = "https://discord.gg/"
 router = APIRouter(
-    prefix="/",
     tags=["root"],
     responses={404: {"model": RedirictDTO.RedirectError}},
 )
@@ -28,7 +27,7 @@ async def get_index(request: Request):
 async def redirector(request: Request, domen_link: str, db: Session = Depends(get_db)):
     static = get_static_files()
     if domen_link in static:
-        return FileResponse(os.path.join(static[domen_link], domen_link))
+        return FileResponse(domen_link)
             
     redirect_link = RedirictDB.get_redirect(db, domen_link=domen_link)
 
@@ -36,5 +35,5 @@ async def redirector(request: Request, domen_link: str, db: Session = Depends(ge
         return RedirectResponse(DISCORD_INVITE+text, status_code=301)
     else:
         return JSONResponse({
-            "detail": f"non-existent link={str(request.base_url)+domen_link}({type(domen_link)})",
+            "detail": f"non-existent link: {str(request.base_url)+domen_link}",
         }, status_code=404)
