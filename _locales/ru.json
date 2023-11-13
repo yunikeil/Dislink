@@ -1,0 +1,8 @@
+create_shortcut_name
+create_shortcut_description
+get_shortcut_name
+get_shortcut_description
+update_shortcut_name
+update_shortcut_description
+delete_shortcut_name
+delete_shortcut_description
