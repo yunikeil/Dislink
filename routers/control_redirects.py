@@ -32,7 +32,7 @@ async def create_redirect(
     request.client.host
     result = RedirectDB.create_redirect(data, db)
     if text := result.get("error"):
-        return JSONResponse({"comment": text}, status.HTTP_400_BAD_REQUEST)
+        return JSONResponse({"detail": text}, status_code=403)
 
     return result.get("ok")
 
@@ -43,22 +43,26 @@ async def create_redirect(
 )
 async def get_redirect(request: Request, id: int, db: Session = Depends(get_db)):
     result = RedirectDB.get_redirect(db, server_id=id)
+    if text := result.get("error"):
+        return JSONResponse({"detail": text}, status_code=403)
 
-    return result
+    return result.get("ok")
 
 
 @router.put(
-    "/redirect/{id}",
+    "/redirect",
     responses={200: {"model": RedirictDTO.RedirectInfo}},
 )
 async def update_redirect(
     request: Request,
-    id: int,
     data: RedirictDTO.RedirectInfo,
     db: Session = Depends(get_db),
 ):
-    result = RedirectDB.update_redirect(id, data, db)
-    return result
+    result = RedirectDB.update_redirect(data, db)
+    if text := result.get("error"):
+        return JSONResponse({"detail": text}, status_code=403)
+
+    return result.get("ok")
 
 
 @router.delete(
@@ -67,4 +71,7 @@ async def update_redirect(
 )
 async def remove_redirect(request: Request, id: int, db: Session = Depends(get_db)):
     result = RedirectDB.remove_redirect(id, db)
-    return bool(result)
+    if text := result.get("error"):
+        return JSONResponse({"detail": text}, status_code=403)
+    
+    return result.get("ok")
