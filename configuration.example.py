@@ -8,7 +8,7 @@ api_url: str = "http://127.0.0.1:2525/control"
 bot_owners: List[int] = []
 eval_owners: List[int] = []
 
-cogs_on_start: List[str] = []
+cogs_on_start: List[str] = ["redirect_manager"]
 
 client_id: int = ...
 permissions: int = 537184257
@@ -18,6 +18,9 @@ invite_link: str = \
 discord_token: str = ""
 
 # Server config
+
+server_ip: str = "127.0.0.1"
+server_port: int = 2525
 
 control_redirects_allowed_ips: List[str] | None = ["127.0.0.1"]
 
