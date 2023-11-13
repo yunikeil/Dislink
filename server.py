@@ -25,7 +25,6 @@ app = FastAPI(
     openapi_url="/control/openapi.json"
 )
 
-app.mount("/", StaticFiles(directory="_public", html=True))
 
 @app.get("/{domen_link}")
 async def redirector(request: Request, domen_link: str, db: Session = Depends(get_db)):
@@ -37,10 +36,10 @@ async def redirector(request: Request, domen_link: str, db: Session = Depends(ge
             "detail": f"non-existent link={str(request.base_url)+domen_link}({type(domen_link)})",
         }, status_code=404)
 
-
 for part in ROUTETRS:
     app.include_router(part.router)
 
+app.mount("/", StaticFiles(directory="_public", html=True))
 
 if __name__ == '__main__':
     uvicorn.run("server:app", host='127.0.0.1', port=2525, reload=True)
