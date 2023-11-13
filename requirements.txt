@@ -1,5 +1,7 @@
 fastapi
 uvicorn[standard]
 SQLAlchemy
-nextcord
+
+requests
+discord
 aeval

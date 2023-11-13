@@ -1,85 +1,69 @@
-import nextcord
 import logging
-from nextcord import Interaction, Locale
-from nextcord.ext import tasks, application_checks
-from nextcord.ext.commands import Bot, Cog
+import requests
 
+import discord
+from discord import app_commands
+from discord.ext import commands, tasks
+from discord.app_commands import locale_str as _T
 
-logging.basicConfig(level=logging.INFO)
+from configuration import api_url
 
-
-class RedirManagerCog(Cog):
-    def __init__(self, bot: Bot):
+class RedirectCog(commands.Cog):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        print(type(self.create_shortcut))
         self.on_init.start()
 
     @tasks.loop(count=1)
     async def on_init(self):
-        await self.bot.sync_all_application_commands()
-
-    def cog_unload(self):
         pass
 
-    @nextcord.slash_command(
-        name="get_invite",
-        name_localizations={
-            Locale.en_US: "get_invite",
-            Locale.ru: "получить_приглашение",
-        },
-        description_localizations={
-            Locale.en_US: "Get an invite"
-        },
-        guild_ids=[1064192306904846377]
+    @app_commands.command(
+        name=_T("create_shortcut_name"), description=_T("create_shortcut_description")
     )
-    @application_checks.has_permissions(administrator=True)
-    async def get_invite(self, interaction: Interaction):
-        await interaction.response.send_message("123", ephemeral=True)
+    @app_commands.guilds(1064192306904846377)  # Temp decorator
+    async def create_shortcut(self, interaction: discord.Interaction, channel: discord.abc.GuildChannel, domen_link: str) -> None:
+        invite = await channel.create_invite(reason=f"{interaction.user.name} used /{_T('create_shortcut_name')}")
+        try:
+            response = requests.post(
+                url = f"{api_url}/redirect",
+                json = {"server_id": interaction.guild_id, "server_link": invite.code, "domen_link": domen_link}
+            ).json()
+        except requests.exceptions.ConnectionError as e:
+            await interaction.response.send_message("Api server not unavailable")
 
-    @nextcord.slash_command(
-        name="create_invite",
-        name_localizations={
-            Locale.en_US: "create_invite",
-            Locale.ru: "создать_приглашение",
-        },
-        description_localizations={
-            Locale.en_US: "Create an invite"
-        },
-        guild_ids=[1064192306904846377]
+        await interaction.response.send_message(f"Shortcut created!\n```json\n{response}```", ephemeral=True)
+
+    @app_commands.command(
+        name=_T("get_shortcut_name"), description=_T("get_shortcut_description")
     )
-    @application_checks.has_permissions(administrator=True)
-    async def create_invite(self, interaction: Interaction):
-        await interaction.response.send_message("123", ephemeral=True)
+    @app_commands.guilds(1064192306904846377)  # Temp decorator
+    async def get_shortcut(self, interaction: discord.Interaction) -> None:
+        #response = requests.get(f"{api_url}/redirect")
 
-    @nextcord.slash_command(
-        name="update_invite",
-        name_localizations={
-            Locale.en_US: "update_invite",
-            Locale.ru: "обновить_приглашение",
-        },
-        description_localizations={
-            Locale.en_US: "Update an invite",
-        },
-        guild_ids=[1064192306904846377]
+        await interaction.response.send_message("Shortcut retrieved!", ephemeral=True)
+
+    @app_commands.command(
+        name=_T("update_shortcut_name"), description=_T("update_shortcut_description")
     )
-    @application_checks.has_permissions(administrator=True)
-    async def update_invite(self, interaction: Interaction):
-        await interaction.response.send_message("123", ephemeral=True)
+    @app_commands.guilds(1064192306904846377)  # Temp decorator
+    async def update_shortcut(self, interaction: discord.Interaction) -> None:
+        #response = requests.put(f"{api_url}/redirect")
+        
 
-    @nextcord.slash_command(
-        name="delete_invite",
-        name_localizations={
-            Locale.en_US: "delete_invite",
-            Locale.ru: "удалить_приглашение",
-        },
-        description_localizations={
-            Locale.en_US: "Delete an invite",
-        },
-        guild_ids=[1064192306904846377]
+        await interaction.response.send_message("Shortcut updated!", ephemeral=True)
+
+    @app_commands.command(
+        name=_T("delete_shortcut_name"), description=_T("delete_shortcut_description")
     )
-    @application_checks.has_permissions(administrator=True)
-    async def delete_invite(self, interaction: Interaction):
-        await interaction.response.send_message("123", ephemeral=True)
+    @app_commands.guilds(1064192306904846377)  # Temp decorator
+    async def delete_shortcut(self, interaction: discord.Interaction) -> None:
+        #response = requests.delete(f"{api_url}/redirect")
+        
 
-def setup(bot: Bot):
-    print("RedirManagerCog loaded!")
-    bot.add_cog(RedirManagerCog(bot))
+        await interaction.response.send_message("Shortcut deleted!", ephemeral=True)
+
+
+async def setup(bot: commands.Bot) -> None:
+    logging.getLogger("discord.cogs.load").info("RedirectCog loaded!")
+    await bot.add_cog(RedirectCog(bot))
