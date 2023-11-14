@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from dto import redirect_info as RedirictDTO
 from services import redirect_info as RedirictDB
-from services.static import get_static_files
+from services.static import is_static
 
 
 DISCORD_INVITE: str = "https://discord.gg/"
@@ -23,12 +23,11 @@ async def get_index(request: Request):
     return FileResponse("_public/index.html")
 
 
-@router.get("/{domen_link}")
+@router.get("/{domen_link:path}")
 async def redirector(request: Request, domen_link: str, db: Session = Depends(get_db)):
-    static = get_static_files()
-    if domen_link in static:
-        return FileResponse(domen_link)
-            
+    if static_path := is_static(domen_link):
+        return FileResponse(static_path)
+    
     redirect_link = RedirictDB.get_redirect(db, domen_link=domen_link)
 
     if text := redirect_link.get("ok"):
