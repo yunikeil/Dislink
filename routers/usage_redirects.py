@@ -30,7 +30,7 @@ async def redirector(request: Request, domen_link: str, db: Session = Depends(ge
     
     redirect_link = RedirictDB.get_redirect(db, domen_link=domen_link)
 
-    if text := redirect_link.get("ok"):
+    if text := redirect_link.get("ok").server_link:
         return RedirectResponse(DISCORD_INVITE+text, status_code=301)
     else:
         return JSONResponse({
