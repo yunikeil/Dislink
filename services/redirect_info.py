@@ -21,12 +21,9 @@ def create_redirect(data: RedirInfoDTO, db: Session):
 
     except sqlalchemy.exc.IntegrityError as e:
         error_messages = {
-            "UNIQUE constraint failed: RedirectInfo.server_id": \
-                f"server_id={data.server_id}({type(data.server_id)}, primary_key=True) already exists",
-            "UNIQUE constraint failed: RedirectInfo.server_link": \
-                f"server_link={data.server_link}({type(data.server_link)}, unique=True) already exists",
-            "UNIQUE constraint failed: RedirectInfo.domen_link": \
-                f"domen_link={data.domen_link}({type(data.domen_link)}, unique=True) already exists",
+            "UNIQUE constraint failed: RedirectInfo.server_id": f"server_id_already_exists",
+            "UNIQUE constraint failed: RedirectInfo.server_link": f"server_link_already_exists",
+            "UNIQUE constraint failed: RedirectInfo.domen_link": f"domen_link_already_exists",
         }
         return {"error": error_messages.get(str(e.orig))}
 
