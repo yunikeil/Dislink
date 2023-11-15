@@ -27,12 +27,18 @@ async def get_index(request: Request):
 async def redirector(request: Request, domen_link: str, db: Session = Depends(get_db)):
     if static_path := is_static(domen_link):
         return FileResponse(static_path)
-    
+
     redirect_link = RedirictDB.get_redirect(db, domen_link=domen_link)
 
     if data := redirect_link.get("ok"):
-        return RedirectResponse(DISCORD_INVITE+data.server_link, status_code=302)
+        headers = {"Cache-Control": "no-cache"}
+        return RedirectResponse(
+            DISCORD_INVITE + data.server_link, status_code=302, headers=headers
+        )
     else:
-        return JSONResponse({
-            "detail": f"non-existent link: {str(request.base_url)+domen_link}",
-        }, status_code=404)
+        return JSONResponse(
+            {
+                "detail": f"non-existent link: {str(request.base_url)+domen_link}",
+            },
+            status_code=404,
+        )
