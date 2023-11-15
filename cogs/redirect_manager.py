@@ -30,11 +30,17 @@ class RedirectCog(commands.Cog):
     @tasks.loop(count=1)
     async def on_init(self):
         pass
-
+    
     @app_commands.command(
         name=_T("create_shortcut_name"), description=_T("create_shortcut_description")
     )
-    @app_commands.guilds(1064192306904846377)  # Temp decorator
+    @app_commands.guild_only
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.guilds(1169354124299603978)  # Temp decorator
+    @app_commands.rename(channel='channel')
+    @app_commands.rename(domen_link='domen_link')
+    @app_commands.describe(channel='channel_discr')
+    @app_commands.describe(domen_link='domen_link_discr')
     async def create_shortcut(
         self,
         interaction: discord.Interaction,
@@ -45,7 +51,6 @@ class RedirectCog(commands.Cog):
             reason=f"{interaction.user.name} used /{_T('create_shortcut_name')}",
             max_age=0,
         )
-        response = None
         async with requests_error_handler(interaction):
             async with aiohttp.ClientSession() as session:
                 async with session.post(
@@ -56,12 +61,12 @@ class RedirectCog(commands.Cog):
                         "domen_link": domen_link,
                     },
                 ) as resp:
-                    response = await resp.json()
+                    response: dict = await resp.json()
 
                     if resp.status == 200:
                         await interaction.response.send_message(
-                            f"Link created: [dislink.space/{response.get(domen_link)}] "
-                            f"(https://discord.gg/{response.get('server_link')})",
+                            f"Link created: [dislink.space/{response.get('domen_link')}]"
+                            f"(https://discord.gg/{response.get('server_link')} )",
                             ephemeral=True,
                         )
                     elif resp.status == 403:
@@ -79,7 +84,8 @@ class RedirectCog(commands.Cog):
     @app_commands.guilds(1064192306904846377)  # Temp decorator
     async def get_shortcut(self, interaction: discord.Interaction) -> None:
         async with requests_error_handler(interaction):
-            ...
+            async with aiohttp.ClientSession() as session:  
+                ...
 
         await interaction.response.send_message("Shortcut retrieved!", ephemeral=True)
 
@@ -89,7 +95,8 @@ class RedirectCog(commands.Cog):
     @app_commands.guilds(1064192306904846377)  # Temp decorator
     async def update_shortcut(self, interaction: discord.Interaction) -> None:
         async with requests_error_handler(interaction):
-            ...
+            async with aiohttp.ClientSession() as session:
+                ...
 
         await interaction.response.send_message("Shortcut updated!", ephemeral=True)
 
@@ -99,7 +106,8 @@ class RedirectCog(commands.Cog):
     @app_commands.guilds(1064192306904846377)  # Temp decorator
     async def delete_shortcut(self, interaction: discord.Interaction) -> None:
         async with requests_error_handler(interaction):
-            ...
+            async with aiohttp.ClientSession() as session:
+                ...
 
         await interaction.response.send_message("Shortcut deleted!", ephemeral=True)
 
