@@ -31,7 +31,7 @@ async def redirector(request: Request, domen_link: str, db: Session = Depends(ge
     redirect_link = RedirictDB.get_redirect(db, domen_link=domen_link)
 
     if data := redirect_link.get("ok"):
-        return RedirectResponse(DISCORD_INVITE+data.server_link, status_code=301)
+        return RedirectResponse(DISCORD_INVITE+data.server_link, status_code=302)
     else:
         return JSONResponse({
             "detail": f"non-existent link: {str(request.base_url)+domen_link}",
