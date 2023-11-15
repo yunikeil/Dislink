@@ -75,3 +75,14 @@ async def remove_redirect(request: Request, id: int, db: Session = Depends(get_d
         return JSONResponse({"detail": text}, status_code=403)
     
     return result.get("ok")
+
+@router.get(
+    "/redirects",
+    responses={200: {"model": RedirictDTO.RedirectInfo}},
+)
+async def get_all(request: Request, db: Session = Depends(get_db)):
+    result = RedirectDB.gel_all(db)
+    if text := result.get("error"):
+        return JSONResponse({"detail": text}, status_code=403)
+    
+    return result.get("ok")

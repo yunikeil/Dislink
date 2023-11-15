@@ -84,3 +84,15 @@ def remove_redirect(server_id: int, db: Session):
     db.commit()
 
     return {"ok": redirect}
+
+
+def gel_all(db: Session):
+    redirects = (
+        db.query(RedirModelDB).all()
+    )
+    
+    if not redirects:
+        return {"error": "There is no active redirection"}  
+    
+    return {"ok": redirects}
+
