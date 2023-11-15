@@ -17,6 +17,7 @@ router = APIRouter(
     responses={404: {"model": RedirictDTO.RedirectError}},
 )
 
+
 @router.get("/")
 async def get_index(request: Request):
     return FileResponse("_public/index.html")
@@ -24,8 +25,6 @@ async def get_index(request: Request):
 
 @router.get("/{domen_link:path}")
 async def redirector(request: Request, domen_link: str, db: Session = Depends(get_db)):
-    # ! error in other routers: "non-existent link: https://dislink.space/control/redirect/1169354124299603978" in control.get_redirect
-
     if static_path := is_static(domen_link):
         return FileResponse(static_path)
     
