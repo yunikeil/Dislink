@@ -9,7 +9,7 @@ import configuration
 
 
 Base.metadata.create_all(bind=engine)
-ROUTETRS = [usage_redirects, control_redirects]
+ROUTETRS = [control_redirects, usage_redirects]
 
 app = FastAPI(
     version="0.1.0",
