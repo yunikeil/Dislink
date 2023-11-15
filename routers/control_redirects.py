@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Request, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -78,7 +80,7 @@ async def remove_redirect(request: Request, id: int, db: Session = Depends(get_d
 
 @router.get(
     "/redirects",
-    responses={200: {"model": RedirictDTO.RedirectInfo}},
+    responses={200: {"model": List[RedirictDTO.RedirectInfo]}},
 )
 async def get_all(request: Request, db: Session = Depends(get_db)):
     result = RedirectDB.gel_all(db)
