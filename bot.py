@@ -5,7 +5,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-import configuration
+import core.settings as configuration
 
 
 class MyCustomTranslator(app_commands.Translator):
@@ -28,8 +28,8 @@ class MyCustomTranslator(app_commands.Translator):
 class DeleteMessage(discord.ui.View):
     def __init__(self, *, message, ctx):
         super().__init__(timeout=60 * 5)
-        self.message = message
-        self.ctx = ctx
+        self.message: discord.Message = message
+        self.ctx: commands.Context = ctx
 
     @discord.ui.button(label="delete this message", style=discord.ButtonStyle.grey)
     async def delete_this(
@@ -79,7 +79,7 @@ class Bot(commands.Bot):
         await self.tree.set_translator(MyCustomTranslator())
         if self.cogs_on_start:
             [await self.load_extension(f"cogs.{cog}") for cog in self.cogs_on_start]
-        self.tree.copy_global_to(guild=discord.Object(id=1064192306904846377))
+        #self.tree.copy_global_to(guild=discord.Object(id=1064192306904846377))
         #await self.tree.sync(guild=discord.Object(id=1064192306904846377))
 
     async def on_ready(self):
@@ -92,8 +92,6 @@ class Bot(commands.Bot):
 
 
 intents = discord.Intents.default()
-intents.message_content = True
-
 bot: commands.Bot = Bot(
     command_prefix=">",
     cogs_on_start=configuration.cogs_on_start,
@@ -103,7 +101,6 @@ bot: commands.Bot = Bot(
 
 @bot.command()
 async def cog_load(ctx: commands.Context, cog: str):
-    # ! loading all cogs in file
     if ctx.author.id not in bot.OWNERS:
         return
     try:
@@ -118,7 +115,6 @@ async def cog_load(ctx: commands.Context, cog: str):
 
 @bot.command()
 async def cog_unload(ctx: commands.Context, cog: str):
-    # ! unloading all cogs in file
     if ctx.author.id not in bot.OWNERS:
         return
     try:
@@ -133,7 +129,6 @@ async def cog_unload(ctx: commands.Context, cog: str):
 
 @bot.command()
 async def cog_reload(ctx: commands.Context, cog: str):
-    # ! reloading all cogs in file
     if ctx.author.id not in bot.OWNERS:
         return
     try:
@@ -183,4 +178,4 @@ async def eval_string(ctx: commands.Context, *, content: str):
 
 
 if __name__ == "__main__":
-    bot.run(configuration.discord_token)
+    bot.run()

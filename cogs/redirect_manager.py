@@ -8,8 +8,6 @@ from discord import app_commands
 from discord.ext import commands, tasks
 from discord.app_commands import locale_str as _T
 
-from configuration import api_url
-
 
 @asynccontextmanager
 async def requests_error_handler(interaction: discord.Interaction):

@@ -4,8 +4,10 @@ from fastapi import APIRouter, Request, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from database import get_db
-from services.authentication import IpCheck
+from core.database import get_db
+from core.security import IpCheck
+from app.redirect.services import
+
 from services import redirect_info as RedirectDB
 from dto import redirect_info as RedirictDTO
 import configuration

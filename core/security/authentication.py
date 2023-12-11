@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, status
 
 
 class IpCheck():
@@ -12,7 +12,11 @@ class IpCheck():
         if not self.allowed_ips or len(self.allowed_ips) == 0:
             return True
         if client_ip not in self.allowed_ips:
-            raise HTTPException(status_code=403, detail="IP address is not allowed")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+            )
+
 
 
 

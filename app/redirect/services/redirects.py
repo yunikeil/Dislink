@@ -3,8 +3,8 @@ import time
 import sqlalchemy
 from sqlalchemy.orm import Session
 
-from db_models.redirect_info import RedirectInfo as RedirModelDB
-from dto.redirect_info import RedirectInfo as RedirInfoDTO
+from app.redirect.models import RedirectInfo as RedirModelDB
+from app.redirect.schemas import RedirectInfo as RedirInfoDTO
 
 
 def create_redirect(data: RedirInfoDTO, db: Session):
@@ -19,13 +19,9 @@ def create_redirect(data: RedirInfoDTO, db: Session):
         db.commit()
         db.refresh(redirect)
 
-    except sqlalchemy.exc.IntegrityError as e:
-        error_messages = {
-            "UNIQUE constraint failed: RedirectInfo.server_id": f"server_id_already_exists",
-            "UNIQUE constraint failed: RedirectInfo.server_link": f"server_link_already_exists",
-            "UNIQUE constraint failed: RedirectInfo.domen_link": f"domen_link_already_exists",
-        }
-        return {"error": error_messages.get(str(e.orig))}
+    except sqlalchemy.exc.IntegrityError:
+        # Что то уже существует
+        return None
 
     return {"ok": redirect}
 
