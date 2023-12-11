@@ -1,4 +1,5 @@
 import json
+import asyncio
 import secrets
 from typing import Annotated
 
@@ -8,11 +9,10 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 
-from core.settings import server_ip, server_port
-from core.database import engine, Base
+import core.settings as conf
+from core.database import init_models
 
 
-Base.metadata.create_all(bind=engine)
 security = HTTPBasic()
 app = FastAPI(
     version="0.1.0",
@@ -29,12 +29,12 @@ def __temp_get_current_username(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)]
 ):
     current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = b"euflfk"
+    correct_username_bytes = b"yunik"
     is_correct_username = secrets.compare_digest(
         current_username_bytes, correct_username_bytes
     )
     current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = b"gfhjkm"
+    correct_password_bytes = b"24011953"
     is_correct_password = secrets.compare_digest(
         current_password_bytes, correct_password_bytes
     )
@@ -60,4 +60,5 @@ async def openapi(username: str = Depends(__temp_get_current_username)):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app=app, host=server_ip, port=server_port, reload=True)
+    asyncio.run(init_models(drop_all=True))
+    uvicorn.run("server:app", host=conf.server_ip, port=conf.server_port, reload=True)

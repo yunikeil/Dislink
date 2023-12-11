@@ -5,12 +5,15 @@ import os
 # Load environment variables from the .env file
 load_dotenv()
 
+debug: bool = os.getenv("DEBUG").lower() == "true"
+
 # Server config
 server_ip = os.getenv("SERVER_IP")
 server_port = int(os.getenv("SERVER_PORT"))
 server_domen = os.getenv("SERVER_DOMEN")
 control_redirects_allowed_ips = os.getenv("CONTROL_REDIRECTS_ALLOWED_IPS").split(",") if os.getenv(
     "CONTROL_REDIRECTS_ALLOWED_IPS") else None
+database_url = os.getenv("DATABASE_URL")
 
 # Bot config
 api_url = os.getenv("API_URL")
