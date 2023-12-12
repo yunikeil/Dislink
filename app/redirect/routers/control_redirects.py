@@ -61,9 +61,9 @@ async def update_redirect(request: Request, server_id: int, data: schemas.Redire
     if update_data.get("server_link") == redirect.server_link:
         del update_data["server_link"]
     
-    if update_data.get("domen_link") == redirect.server_link:
+    if update_data.get("domen_link") == redirect.domen_link:
         del update_data["domen_link"]
-    
+        
     if update_data.get("domen_link"):
         if await services.get_by_domen_url(db_session, domen_link=data.domen_link):
             raise HTTPException(
