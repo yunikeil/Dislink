@@ -11,7 +11,7 @@ from fastapi.openapi.utils import get_openapi
 
 import core.settings as conf
 from core.database import init_models
-
+from app.redirect.models import *
 
 security = HTTPBasic()
 app = FastAPI(
