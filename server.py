@@ -25,8 +25,6 @@ app = FastAPI(
     openapi_url=None
 )
 
-app.include_router(redirect_routers)
-
 def __temp_get_current_username(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)]
 ):
@@ -60,7 +58,9 @@ async def get_swagger_documentation(
 async def openapi(username: str = Depends(__temp_get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
+app.include_router(redirect_routers)
+
 
 if __name__ == '__main__':
-    asyncio.run(init_models(drop_all=True))
+    asyncio.run(init_models(drop_all=False))
     uvicorn.run("server:app", host=conf.server_ip, port=conf.server_port, reload=True)

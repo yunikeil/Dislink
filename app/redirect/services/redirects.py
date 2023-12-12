@@ -11,7 +11,7 @@ async def get_by_server_id(db_session: AsyncSession, *, server_id: int) -> model
     return redirect
 
 
-async def get_by_domen_url(db_session: AsyncSession, *, domen_link: str):
+async def get_by_domen_url(db_session: AsyncSession, *, domen_link: str) -> models.RedirectInfo | None:
     stmt = select(models.RedirectInfo).where(models.RedirectInfo.domen_link == domen_link)
     redirect: models.RedirectInfo | None = (await db_session.execute(stmt)).scalar()
     return redirect

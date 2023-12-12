@@ -11,7 +11,7 @@ from app.redirect import services, schemas, models
 
 
 checker = IpCheck(allowed_ips=config.control_redirects_allowed_ips)
-router = APIRouter(dependencies=[Depends(checker.is_ip_allowed)])
+router = APIRouter(dependencies=[Depends(checker.is_ip_allowed)], tags=["redirect"], prefix="/c")
 
 
 @router.post(path="/redirect")
