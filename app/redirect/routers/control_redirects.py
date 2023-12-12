@@ -19,13 +19,13 @@ async def create_redirect(request: Request, data: schemas.RedirectCreate, db_ses
     if await services.get_by_domen_url(db_session, domen_link=data.domen_link):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="The redirect with this domen already exists in the system.",
+            detail="domen_already_exist",
         )
     
     if await services.get_by_server_id(db_session, server_id=data.server_id):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="The redirect with this server_id already exists in the system.",
+            detail="redirect_already_exist",
         )
     
     redirect = await services.create_redirect(db_session, obj_in=data)
@@ -40,7 +40,7 @@ async def get_redirect(request: Request, server_id: int, db_session: AsyncSessio
     if not redirect:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Redirect not found."
+            detail="redirect_not_exist."
         )
     
     return redirect
@@ -53,7 +53,7 @@ async def update_redirect(request: Request, server_id: int, data: schemas.Redire
     if not redirect:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Redirect not found."
+            detail="redirect_not_exist."
         )
     
     update_data = data.model_dump(exclude_unset=True)
@@ -68,7 +68,7 @@ async def update_redirect(request: Request, server_id: int, data: schemas.Redire
         if await services.get_by_domen_url(db_session, domen_link=data.domen_link):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail="Domen link already exist."
+                detail="domen_already_exist"
             )
     
     new_redirect = await services.update_redirect(db_session, db_obj=redirect, obj_in=data)
@@ -83,7 +83,7 @@ async def delete_redirect(request: Request, server_id: int, db_session: AsyncSes
     if not redirect:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Redirect not found."
+            detail="redirect_not_exist"
         )
     
     deleted = await services.delete_redirect(db_session, db_obj=redirect)
