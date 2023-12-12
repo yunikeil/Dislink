@@ -68,6 +68,8 @@ class RedirectCog(commands.Cog):
         invite = await self.bot.fetch_invite(invite_code)
         await invite.delete()
 
+    
+    
     @app_commands.command(
         name=_T("create_shortcut_name"), description=_T("create_shortcut_description")
     )
@@ -116,11 +118,14 @@ class RedirectCog(commands.Cog):
     )
     @app_commands.default_permissions(administrator=True)
     @app_commands.guilds(1064192306904846377)  # Temp decorator
-    async def get_shortcut(self, interaction: discord.Interaction) -> None:
+    async def get_shortcut(self, interaction: discord.Interaction, channel: discord.abc.GuildChannel = None) -> None:
         status, response, server_error = await self.get_redirect(server_id=interaction.guild_id)
         """
         {'server_link': 'nK7QTt7bw9', 'domen_link': 'test', 'updated_at': 1702403522, 'server_id': 1064192306904846377, 'last_use': 1702403522, 'created_at': 1702403522}
         """
+        # Если указан канал, то приглашение отправляется туда
+        #f"Link created: [dislink.space/{response.get('domen_link')}]"
+        #f"(https://discord.gg/{response.get('server_link')} )",
         if server_error:
             await interaction.response.send_message(
                 content=_T(server_error), ephemeral=True

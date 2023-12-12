@@ -66,6 +66,7 @@ bot: commands.Bot = Bot(
     command_prefix=">",
     cogs_on_start=configuration.cogs_on_start,
     intents=intents,
+    status=discord.Status.dnd
 )
 
 
