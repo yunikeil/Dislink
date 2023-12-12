@@ -4,7 +4,7 @@ from pydantic import Field, BaseModel
 class RedirectCreate(BaseModel):
     server_id: int
     server_link: str
-    domen_link: str = Field(
+    domen_link: str | None = Field(
         examples=["server"],
         min_length=2,
         max_length=30,
