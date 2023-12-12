@@ -45,14 +45,8 @@ async def update_redirect(db_session: AsyncSession, *, db_obj: models.RedirectIn
     return db_obj
 
 
-async def delete_redirect(db_session: AsyncSession, *, server_id: int):
-    stmt = select(models.RedirectInfo).where(models.RedirectInfo.server_id == server_id)
-    redirect = (await db_session.execute(stmt)).scalar()
-    
-    if not redirect:
-        return None
-
-    await db_session.delete(redirect)
+async def delete_redirect(db_session: AsyncSession, *, db_obj: models.RedirectInfo):
+    await db_session.delete(db_obj)
     await db_session.commit()
 
-    return redirect
+    return db_obj

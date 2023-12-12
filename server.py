@@ -11,7 +11,8 @@ from fastapi.openapi.utils import get_openapi
 
 import core.settings as conf
 from core.database import init_models
-from app.redirect.models import *
+from app.redirect import redirect_routers
+
 
 security = HTTPBasic()
 app = FastAPI(
@@ -24,6 +25,7 @@ app = FastAPI(
     openapi_url=None
 )
 
+app.include_router(redirect_routers)
 
 def __temp_get_current_username(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)]

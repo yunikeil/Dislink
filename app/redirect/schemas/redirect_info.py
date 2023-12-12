@@ -9,7 +9,7 @@ class RedirectCreate(BaseModel):
 
 class RedirectUpdate(BaseModel):
     server_link: str
-    domen_link: str
+    domen_link: str | None = None
 
 
 class RedirectInDB(RedirectCreate):
