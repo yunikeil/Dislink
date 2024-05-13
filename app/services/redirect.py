@@ -2,7 +2,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.redirect import models, schemas
+from app import models, schemas
 
 
 async def get_by_server_id(db_session: AsyncSession, *, server_id: int) -> models.RedirectInfo | None:

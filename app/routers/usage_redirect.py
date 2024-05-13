@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import utils
 from core.settings import config
 from core.database import get_session
-from app.redirect import services, models
+from app import services, models
 
 
 DISCORD_INVITE: str = "https://discord.gg/"

@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.database import get_session
 from core.security import IpCheck
 from core.settings import config
-from app.redirect import services, schemas, models
+from app import services, schemas, models
 
 
 
